@@ -163,5 +163,25 @@
 
 <!-- Основной скрипт -->
 <script src="js/script.js"></script>
+  <script>
+    
+  // Дублируем код онлайн-записи для теста
+  const showBtn = document.getElementById('showAppointmentBtn');
+  const blockForm = document.getElementById('appointmentFormBlock');
+  if (showBtn) {
+    showBtn.onclick = () => {
+      blockForm.style.display = blockForm.style.display === 'block' ? 'none' : 'block';
+    };
+  }
+  const formTest = document.getElementById('onlineAppointmentForm');
+  if (formTest) {
+    formTest.onsubmit = (e) => {
+      e.preventDefault();
+      alert('✅ ТЕСТ: Заявка принята!');
+      blockForm.style.display = 'none';
+      formTest.reset();
+    };
+  }
+</script>
 </body>
 </html>
