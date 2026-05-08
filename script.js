@@ -254,7 +254,7 @@ if (onlineBtn) {
     onlineBtn.addEventListener('click', function() {
         if (typeof ym === 'function') {
             ym(109122763, 'reachGoal', 'click_online_btn');
-            console.log('✅ Яндекс.Метрика: цель "click_online_btn" достигнута');
+            console.log('Яндекс.Метрика: цель "click_online_btn" достигнута');
         }
     });
 }
@@ -265,7 +265,7 @@ if (appointmentForm) {
     appointmentForm.addEventListener('submit', function() {
         if (typeof ym === 'function') {
             ym(109122763, 'reachGoal', 'form_submit');
-            console.log('✅ Яндекс.Метрика: цель "form_submit" достигнута');
+            console.log('Яндекс.Метрика: цель "form_submit" достигнута');
         }
     });
 }
