@@ -245,3 +245,27 @@ renderDoctorsSwiper();
 renderStories();
 renderFAQ();
 renderLicenses();
+
+// ========== ЯНДЕКС.МЕТРИКА ==========
+
+// Цель 1: клик по кнопке «Записаться онлайн»
+const onlineBtn = document.getElementById('showAppointmentBtn');
+if (onlineBtn) {
+    onlineBtn.addEventListener('click', function() {
+        if (typeof ym === 'function') {
+            ym(109122763, 'reachGoal', 'click_online_btn');
+            console.log('✅ Яндекс.Метрика: цель "click_online_btn" достигнута');
+        }
+    });
+}
+
+// Цель 2: отправка формы
+const appointmentForm = document.getElementById('onlineAppointmentForm');
+if (appointmentForm) {
+    appointmentForm.addEventListener('submit', function() {
+        if (typeof ym === 'function') {
+            ym(109122763, 'reachGoal', 'form_submit');
+            console.log('✅ Яндекс.Метрика: цель "form_submit" достигнута');
+        }
+    });
+}
