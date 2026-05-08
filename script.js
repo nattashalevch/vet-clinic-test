@@ -222,20 +222,61 @@ if (authForm) {
   };
 }
 
-// Онлайн запись
-  const showAppBtn = document.getElementById('showAppointmentBtn');
+// ==================== ОНЛАЙН ЗАПИСЬ ====================
+document.addEventListener('DOMContentLoaded', function() {
+  // Показать/скрыть форму
+  const showBtn = document.getElementById('showAppointmentBtn');
   const formBlock = document.getElementById('appointmentFormBlock');
-  showAppBtn.onclick = () => { if(formBlock.style.display === 'none' || formBlock.style.display === '') formBlock.style.display = 'block'; else formBlock.style.display = 'none'; };
-  document.getElementById('onlineAppointmentForm').onsubmit = (e) => {
-    e.preventDefault();
-    let apps = JSON.parse(localStorage.getItem('vet_appointments') || '[]');
-    apps.push({ fio: document.getElementById('app_fio').value, phone: document.getElementById('app_phone').value, social: document.getElementById('app_social').value, pet: document.getElementById('app_pet').value, reason: document.getElementById('app_reason').value, date: document.getElementById('app_date').value, time: new Date() });
-    localStorage.setItem('vet_appointments', JSON.stringify(apps));
-    alert('Заявка принята! Администратор свяжется с вами в течении часа.');
-    formBlock.style.display = 'none';
-    e.target.reset();
-  };
-// ==================== ЯНДЕКС.МЕТРИКА - ЦЕЛИ ====================
+  
+  if (showBtn && formBlock) {
+    showBtn.onclick = function() {
+      if (formBlock.style.display === 'block') {
+        formBlock.style.display = 'none';
+      } else {
+        formBlock.style.display = 'block';
+      }
+    };
+  }
+  
+  // Отправка формы
+  const form = document.getElementById('onlineAppointmentForm');
+  if (form) {
+    form.onsubmit = function(e) {
+      e.preventDefault();
+      
+      // Получаем данные
+      const fio = document.getElementById('app_fio')?.value || '';
+      const phone = document.getElementById('app_phone')?.value || '';
+      const pet = document.getElementById('app_pet')?.value || '';
+      
+      // Сохраняем
+      let apps = JSON.parse(localStorage.getItem('vet_appointments') || '[]');
+      apps.push({
+        fio: fio,
+        phone: phone,
+        pet: pet,
+        time: new Date()
+      });
+      localStorage.setItem('vet_appointments', JSON.stringify(apps));
+      
+      // Показываем сообщение
+      alert('✅ Заявка принята! Администратор свяжется с вами в течение 8 часов.');
+      
+      // Скрываем форму и очищаем
+      if (formBlock) formBlock.style.display = 'none';
+      form.reset();
+    };
+  }
+});
+
+// ==================== ЗАПУСК ====================
+renderServices();
+renderDoctorsSwiper();
+renderStories();
+renderFAQ();
+renderLicenses();
+
+// ==================== ЯНДЕКС.МЕТРИКА  ====================
 const onlineBtn = document.getElementById('showAppointmentBtn');
 if (onlineBtn) {
   onlineBtn.addEventListener('click', function() {
@@ -255,10 +296,3 @@ if (appointmentForm) {
     }
   });
 }
-
-// ==================== ЗАПУСК ВСЕХ ФУНКЦИЙ ====================
-renderServices();
-renderDoctorsSwiper();
-renderStories();
-renderFAQ();
-renderLicenses();
