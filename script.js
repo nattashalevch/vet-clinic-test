@@ -217,28 +217,37 @@ authForm.onsubmit = (e) => {
 // ==================== ОНЛАЙН ЗАПИСЬ ====================
 const showAppBtn = document.getElementById('showAppointmentBtn');
 const formBlock = document.getElementById('appointmentFormBlock');
-showAppBtn.onclick = () => {
-  formBlock.style.display = formBlock.style.display === 'none' || formBlock.style.display === '' ? 'block' : 'none';
-};
 
-document.getElementById('onlineAppointmentForm').onsubmit = (e) => {
-  e.preventDefault();
-  let apps = JSON.parse(localStorage.getItem('vet_appointments') || '[]');
-  apps.push({
-    fio: document.getElementById('app_fio').value,
-    phone: document.getElementById('app_phone').value,
-    social: document.getElementById('app_social').value,
-    pet: document.getElementById('app_pet').value,
-    reason: document.getElementById('app_reason').value,
-    date: document.getElementById('app_date').value,
-    time: new Date()
-  });
-  localStorage.setItem('vet_appointments', JSON.stringify(apps));
-  alert('✅ Заявка принята! Администратор свяжется с вами в течение 8 часов.');
-  formBlock.style.display = 'none';
-  e.target.reset();
-};
+if (showAppBtn && formBlock) {
+  showAppBtn.onclick = () => {
+    formBlock.style.display = formBlock.style.display === 'block' ? 'none' : 'block';
+  };
+}
 
+const appointmentForm = document.getElementById('onlineAppointmentForm');
+
+if (appointmentForm) {
+  appointmentForm.onsubmit = (e) => {
+    e.preventDefault();
+    
+    // Сохраняем только те поля, которые есть в форме
+    let apps = JSON.parse(localStorage.getItem('vet_appointments') || '[]');
+    apps.push({
+      fio: document.getElementById('app_fio')?.value || '',
+      phone: document.getElementById('app_phone')?.value || '',
+      pet: document.getElementById('app_pet')?.value || '',
+      time: new Date()
+    });
+    localStorage.setItem('vet_appointments', JSON.stringify(apps));
+    
+    // Показываем сообщение
+    alert('✅ Заявка принята! Администратор свяжется с вами в течение часа.');
+    
+    // Скрываем форму и очищаем поля
+    formBlock.style.display = 'none';
+    appointmentForm.reset();
+  };
+}
 // ==================== ЗАПУСК ВСЕХ ФУНКЦИЙ ====================
 renderServices();
 renderDoctorsSwiper();
