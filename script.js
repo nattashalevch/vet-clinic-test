@@ -24,7 +24,7 @@ function renderServices() {
   `).join('');
 }
 
-// ==================== ВРАЧИ  ====================
+// ==================== ВРАЧИ ====================
 const doctors = [
   { name: "Иванова Екатерина Валентиновна", role: "Ведущий кардиолог", photo: "images/doctors/doctor1.jpg" },
   { name: "Кильдеева Дарья Руслановна", role: "Ведущий хирург", photo: "images/doctors/doctor2.jpg" },
@@ -172,61 +172,108 @@ const authMsg = document.getElementById('authMessage');
 const modalTitle = document.getElementById('modalTitle');
 const authActionBtn = document.getElementById('authActionBtn');
 
-openModal.onclick = () => modalCab.style.display = 'flex';
-closeSpan.onclick = () => modalCab.style.display = 'none';
+if (openModal) {
+  openModal.onclick = () => modalCab.style.display = 'flex';
+}
+if (closeSpan) {
+  closeSpan.onclick = () => modalCab.style.display = 'none';
+}
 window.onclick = e => { if(e.target === modalCab) modalCab.style.display = 'none'; };
 
-switchBtn.onclick = () => {
-  isLoginMode = !isLoginMode;
-  modalTitle.innerText = isLoginMode ? "Вход" : "Регистрация";
-  authActionBtn.innerText = isLoginMode ? "Войти" : "Создать";
-  authMsg.innerText = '';
-};
+if (switchBtn) {
+  switchBtn.onclick = () => {
+    isLoginMode = !isLoginMode;
+    modalTitle.innerText = isLoginMode ? "Вход" : "Регистрация";
+    authActionBtn.innerText = isLoginMode ? "Войти" : "Создать";
+    authMsg.innerText = '';
+  };
+}
 
-authForm.onsubmit = (e) => {
-  e.preventDefault();
-  const loginVal = document.getElementById('authPhoneEmail').value.trim();
-  const pass = document.getElementById('authPassword').value.trim();
-  let users = JSON.parse(localStorage.getItem('vet_users') || '[]');
-  if (isLoginMode) {
-    const user = users.find(u => (u.phone === loginVal || u.email === loginVal) && u.pass === pass);
-    if (user) {
-      authMsg.style.color = 'green';
-      authMsg.innerText = 'Добро пожаловать!';
-      setTimeout(() => modalCab.style.display = 'none', 1200);
-    } else {
-      authMsg.style.color = 'red';
-      authMsg.innerText = 'Неверные данные';
-    }
-  } else {
-    if (users.some(u => u.phone === loginVal || u.email === loginVal)) {
-      authMsg.innerText = 'Уже существует';
-      return;
-    }
-    users.push({ phone: loginVal.includes('@') ? '' : loginVal, email: loginVal.includes('@') ? loginVal : '', pass: pass });
-    localStorage.setItem('vet_users', JSON.stringify(users));
-    authMsg.style.color = 'green';
-    authMsg.innerText = 'Регистрация OK! Теперь войдите.';
-    isLoginMode = true;
-    modalTitle.innerText = "Вход";
-    authActionBtn.innerText = "Войти";
-    authForm.reset();
-  }
-};
-
-// ==================== Онлайн запись ====================
-  const showAppBtn = document.getElementById('showAppointmentBtn');
-  const formBlock = document.getElementById('appointmentFormBlock');
-  showAppBtn.onclick = () => { if(formBlock.style.display === 'none' || formBlock.style.display === '') formBlock.style.display = 'block'; else formBlock.style.display = 'none'; };
-  document.getElementById('onlineAppointmentForm').onsubmit = (e) => {
+if (authForm) {
+  authForm.onsubmit = (e) => {
     e.preventDefault();
+    const loginVal = document.getElementById('authPhoneEmail').value.trim();
+    const pass = document.getElementById('authPassword').value.trim();
+    let users = JSON.parse(localStorage.getItem('vet_users') || '[]');
+    if (isLoginMode) {
+      const user = users.find(u => (u.phone === loginVal || u.email === loginVal) && u.pass === pass);
+      if (user) {
+        authMsg.style.color = 'green';
+        authMsg.innerText = 'Добро пожаловать!';
+        setTimeout(() => modalCab.style.display = 'none', 1200);
+      } else {
+        authMsg.style.color = 'red';
+        authMsg.innerText = 'Неверные данные';
+      }
+    } else {
+      if (users.some(u => u.phone === loginVal || u.email === loginVal)) {
+        authMsg.innerText = 'Уже существует';
+        return;
+      }
+      users.push({ phone: loginVal.includes('@') ? '' : loginVal, email: loginVal.includes('@') ? loginVal : '', pass: pass });
+      localStorage.setItem('vet_users', JSON.stringify(users));
+      authMsg.style.color = 'green';
+      authMsg.innerText = 'Регистрация OK! Теперь войдите.';
+      isLoginMode = true;
+      modalTitle.innerText = "Вход";
+      authActionBtn.innerText = "Войти";
+      authForm.reset();
+    }
+  };
+}
+
+// ==================== ОНЛАЙН ЗАПИСЬ (ИСПРАВЛЕНА) ====================
+const showAppBtn = document.getElementById('showAppointmentBtn');
+const formBlock = document.getElementById('appointmentFormBlock');
+
+if (showAppBtn && formBlock) {
+  showAppBtn.onclick = () => {
+    formBlock.style.display = formBlock.style.display === 'block' ? 'none' : 'block';
+  };
+}
+
+const appointmentFormSubmit = document.getElementById('onlineAppointmentForm');
+if (appointmentFormSubmit) {
+  appointmentFormSubmit.onsubmit = (e) => {
+    e.preventDefault();
+    
+    // Сохраняем только те поля, которые есть в форме
     let apps = JSON.parse(localStorage.getItem('vet_appointments') || '[]');
-    apps.push({ fio: document.getElementById('app_fio').value, phone: document.getElementById('app_phone').value, social: document.getElementById('app_social').value, pet: document.getElementById('app_pet').value, reason: document.getElementById('app_reason').value, date: document.getElementById('app_date').value, time: new Date() });
+    apps.push({
+      fio: document.getElementById('app_fio')?.value || '',
+      phone: document.getElementById('app_phone')?.value || '',
+      pet: document.getElementById('app_pet')?.value || '',
+      time: new Date()
+    });
     localStorage.setItem('vet_appointments', JSON.stringify(apps));
-    alert('✅ Заявка принята! Администратор свяжется с вами в течении 8 часов.');
-    formBlock.style.display = 'none';
+    
+    alert('Заявка принята! Администратор свяжется с вами в течение часа.');
+    
+    if (formBlock) formBlock.style.display = 'none';
     e.target.reset();
   };
+}
+
+// ==================== ЯНДЕКС.МЕТРИКА - ЦЕЛИ ====================
+const onlineBtn = document.getElementById('showAppointmentBtn');
+if (onlineBtn) {
+  onlineBtn.addEventListener('click', function() {
+    if (typeof ym === 'function') {
+      ym(109122763, 'reachGoal', 'click_online_btn');
+      console.log('Яндекс.Метрика: цель "click_online_btn" достигнута');
+    }
+  });
+}
+
+const appointmentForm = document.getElementById('onlineAppointmentForm');
+if (appointmentForm) {
+  appointmentForm.addEventListener('submit', function() {
+    if (typeof ym === 'function') {
+      ym(109122763, 'reachGoal', 'form_submit');
+      console.log('Яндекс.Метрика: цель "form_submit" достигнута');
+    }
+  });
+}
 
 // ==================== ЗАПУСК ВСЕХ ФУНКЦИЙ ====================
 renderServices();
@@ -234,27 +281,3 @@ renderDoctorsSwiper();
 renderStories();
 renderFAQ();
 renderLicenses();
-
-// ========== ЯНДЕКС.МЕТРИКА ==========
-
-// Цель 1: клик по кнопке «Записаться онлайн»
-const onlineBtn = document.getElementById('showAppointmentBtn');
-if (onlineBtn) {
-    onlineBtn.addEventListener('click', function() {
-        if (typeof ym === 'function') {
-            ym(109122763, 'reachGoal', 'click_online_btn');
-            console.log('Яндекс.Метрика: цель "click_online_btn" достигнута');
-        }
-    });
-}
-
-// Цель 2: отправка формы
-const appointmentForm = document.getElementById('onlineAppointmentForm');
-if (appointmentForm) {
-    appointmentForm.addEventListener('submit', function() {
-        if (typeof ym === 'function') {
-            ym(109122763, 'reachGoal', 'form_submit');
-            console.log('Яндекс.Метрика: цель "form_submit" достигнута');
-        }
-    });
-}
