@@ -214,40 +214,20 @@ authForm.onsubmit = (e) => {
   }
 };
 
-// ==================== ОНЛАЙН ЗАПИСЬ ====================
-const showAppBtn = document.getElementById('showAppointmentBtn');
-const formBlock = document.getElementById('appointmentFormBlock');
-
-if (showAppBtn && formBlock) {
-  showAppBtn.onclick = () => {
-    formBlock.style.display = formBlock.style.display === 'block' ? 'none' : 'block';
-  };
-}
-
-const appointmentForm = document.getElementById('onlineAppointmentForm');
-
-if (appointmentForm) {
-  appointmentForm.onsubmit = (e) => {
+// ==================== Онлайн запись ====================
+  const showAppBtn = document.getElementById('showAppointmentBtn');
+  const formBlock = document.getElementById('appointmentFormBlock');
+  showAppBtn.onclick = () => { if(formBlock.style.display === 'none' || formBlock.style.display === '') formBlock.style.display = 'block'; else formBlock.style.display = 'none'; };
+  document.getElementById('onlineAppointmentForm').onsubmit = (e) => {
     e.preventDefault();
-    
-    // Сохраняем только те поля, которые есть в форме
     let apps = JSON.parse(localStorage.getItem('vet_appointments') || '[]');
-    apps.push({
-      fio: document.getElementById('app_fio')?.value || '',
-      phone: document.getElementById('app_phone')?.value || '',
-      pet: document.getElementById('app_pet')?.value || '',
-      time: new Date()
-    });
+    apps.push({ fio: document.getElementById('app_fio').value, phone: document.getElementById('app_phone').value, social: document.getElementById('app_social').value, pet: document.getElementById('app_pet').value, reason: document.getElementById('app_reason').value, date: document.getElementById('app_date').value, time: new Date() });
     localStorage.setItem('vet_appointments', JSON.stringify(apps));
-    
-    // Показываем сообщение
-    alert('✅ Заявка принята! Администратор свяжется с вами в течение часа.');
-    
-    // Скрываем форму и очищаем поля
+    alert('✅ Заявка принята! Администратор свяжется с вами в течении 8 часов.');
     formBlock.style.display = 'none';
-    appointmentForm.reset();
+    e.target.reset();
   };
-}
+
 // ==================== ЗАПУСК ВСЕХ ФУНКЦИЙ ====================
 renderServices();
 renderDoctorsSwiper();
