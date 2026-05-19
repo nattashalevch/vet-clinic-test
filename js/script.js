@@ -347,6 +347,19 @@ document.addEventListener('DOMContentLoaded', function() {
       if (typeof ym === 'function') ym(109122763, 'reachGoal', 'form_submit');
     });
   }
+const reviewSection = document.querySelector('.stories-slider-section');
+if (reviewSection) {
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      if (typeof ym === 'function') {
+        ym(109122763, 'reachGoal', 'scroll_to_reviews');
+        console.log('Метрика: пользователь увидел отзывы');
+      }
+      observer.disconnect();
+    }
+  });
+  observer.observe(reviewSection);
+}
 
   // ==================== ЗАПУСК ====================
   renderServices();
