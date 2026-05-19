@@ -666,3 +666,49 @@ footer {
     font-size: 1.5rem;
   }
 }
+
+/* Красивое уведомление */
+.toast-success {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #2e7d32;
+  color: white;
+  padding: 14px 24px;
+  border-radius: 40px;
+  font-size: 1rem;
+  font-weight: 500;
+  z-index: 9999;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ===== КНОПКА ЭКСПОРТА ЗАЯВОК (для отчёта) ===== */
+.export-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: var(--purple);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 40px;
+  font-size: 12px;
+  cursor: pointer;
+  z-index: 9999;
+  transition: 0.2s;
+}
+.export-btn:hover {
+  background: var(--orange);
+}
